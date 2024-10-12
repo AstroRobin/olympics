@@ -4,10 +4,6 @@ from django.views import generic
 
 from django.http import JsonResponse
 
-import plotly.express as px
-import plotly.graph_objects as go
-import pandas as pd
-
 from tally_app.models import Country, Athlete, Team, Medal, Event, Host
 
 # Create your views here.
