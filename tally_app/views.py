@@ -177,7 +177,7 @@ def country_stats(request, code):
 		num_silver_medals=Count('events__medals', filter=Q(events__medals__country=country, events__medals__rank='Silver')),
 		num_bronze_medals=Count('events__medals', filter=Q(events__medals__country=country, events__medals__rank='Bronze')),
 		total_medals=Count('events__medals', filter=Q(events__medals__country=country))
-	).order_by('year')
+	).order_by('-year')
 
 	# Prepare the data for Plotly
 	data = {
@@ -188,45 +188,48 @@ def country_stats(request, code):
 		'Bronze Medals': [host.num_bronze_medals for host in medalData],
 	}
 
-	df = pd.DataFrame(data)
+	# df = pd.DataFrame(data)
 
-	cmin = min(df['Total Medals'].values)  # get minimum value of the whole set
-	cmax = max(df['Total Medals'].values)  # get maximum value of the whole set
+	# cmin = min(df['Total Medals'].values)  # get minimum value of the whole set
+	# cmax = max(df['Total Medals'].values)  # get maximum value of the whole set
 
-	fig = go.Figure()
+	# fig = go.Figure()
 
-	colors = [ 'black', '#e8c62c', 'silver', '#e6a14e']
+	# colors = [ 'black', '#e8c62c', 'silver', '#e6a14e']
 
-	for ii, col in enumerate(df.columns[1:]):
-		fig.add_trace(
-			go.Scatter(
-				x=df['year'],  # construct list of identical X values to match the Y-list
-				y=df[col],  # Your MTU list
-				mode='lines+markers',  # scatter plot without lines
-				marker=dict(
-					color=colors[ii],  # set color by the value of Y
-					cmin=cmin,  # absolute color scaling min value
-					cmax=cmax,  # absolute color scaling max value
-				),
-				line=dict(
-					dash='dot' if ii == 0 else 'solid',
-				),
-				name=col,
-			)
-		)
+	# for ii, col in enumerate(df.columns[1:]):
+	# 	fig.add_trace(
+	# 		go.Scatter(
+	# 			x=df['year'],  # construct list of identical X values to match the Y-list
+	# 			y=df[col],  # Your MTU list
+	# 			mode='lines+markers',  # scatter plot without lines
+	# 			marker=dict(
+	# 				color=colors[ii],  # set color by the value of Y
+	# 				cmin=cmin,  # absolute color scaling min value
+	# 				cmax=cmax,  # absolute color scaling max value
+	# 			),
+	# 			line=dict(
+	# 				dash='dot' if ii == 0 else 'solid',
+	# 			),
+	# 			name=col,
+	# 		)
+	# 	)
 
-	fig.update_layout(title=f'{country.fullName} Medal Count (1896 - 2024)',
-				   xaxis_title='Year',
-				   yaxis_title='# Medals')
+	# fig.update_layout(title=f'{country.fullName} Medal Count (1896 - 2024)',
+	# 			   xaxis_title='Year',
+	# 			   yaxis_title='# Medals')
 
-	chart = fig.to_html()
+	# chart = fig.to_html()
+
+	print(data.keys())
 
 	context = {
 		'hosts': hosts.order_by('-year'),
 		'season_filter': season_filter,  # Pass the current filter to the template
 		'top_countries': countries[0:10],
 		'country': country,
-		'chart': chart,
+		'medal_data': zip(data['year'], data['Gold Medals'], data['Silver Medals'], data['Bronze Medals'], data['Total Medals']),
+		# 'chart': chart,
 	}
 
 	return render(request, 'tally_app/country_stats.html', context=context)
