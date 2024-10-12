@@ -27,7 +27,4 @@
         }
     ],
 
-    "scripts": {
-        "build": "./build_file.sh"
-    }
 }
