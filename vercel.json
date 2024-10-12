@@ -13,5 +13,8 @@
             "src": "/static/(.*)",
             "dest": "/static$1"
         }
-    ]
+    ],
+    "scripts": {
+        "build": "./build_file.sh"
+    }
 }
