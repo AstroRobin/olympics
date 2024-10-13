@@ -15,8 +15,8 @@
             "dest": "olympics/wsgi.py"
         },
         {
-            "src": "/static/(.*)",
-            "dest": "/static$1"
+            "src": "olympics/static/(.*)",
+            "dest": "/static/$1"
         }
     ]
 
